@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="description" content="ObsidianAI Sync - Sistema de captura e processamento inteligente de texto para Obsidian" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://obsidian-ai-sync.com/" />
+    <meta property="og:title" content="ObsidianAI Sync" />
+    <meta property="og:description" content="Sistema de captura e processamento inteligente de texto para Obsidian" />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://obsidian-ai-sync.com/" />
+    <meta property="twitter:title" content="ObsidianAI Sync" />
+    <meta property="twitter:description" content="Sistema de captura e processamento inteligente de texto para Obsidian" />
+    <meta property="twitter:image" content="%PUBLIC_URL%/og-image.png" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"></noscript>
+    
+    <title>ObsidianAI Sync</title>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ObsidianAI Sync",
+      "description": "Sistema de captura e processamento inteligente de texto para Obsidian",
+      "url": "https://obsidian-ai-sync.com",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "ObsidianAI Sync Team"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <noscript>Você precisa habilitar JavaScript para executar este aplicativo.</noscript>
+    <div id="root"></div>
+    
+    <!-- Loading indicator -->
+    <div id="loading" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+      <div class="text-center">
+        <div class="spinner spinner-lg mx-auto mb-4"></div>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Carregando ObsidianAI Sync</h2>
+        <p class="text-gray-600 dark:text-gray-400">Inicializando aplicação...</p>
+      </div>
+    </div>
+    
+    <!-- Error boundary fallback -->
+    <div id="error-boundary" class="hidden fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+      <div class="text-center max-w-md mx-auto px-4">
+        <div class="text-red-500 text-6xl mb-4">⚠️</div>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Algo deu errado</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+          Ocorreu um erro inesperado. Por favor, recarregue a página ou entre em contato com o suporte.
+        </p>
+        <button onclick="window.location.reload()" class="btn btn-primary">
+          Recarregar Página
+        </button>
+      </div>
+    </div>
+    
+    <script>
+      // Hide loading indicator when app is ready
+      window.addEventListener('load', function() {
+        const loading = document.getElementById('loading');
+        if (loading) {
+          loading.style.display = 'none';
+        }
+      });
+      
+      // Error handling
+      window.addEventListener('error', function(e) {
+        console.error('Global error:', e.error);
+        const loading = document.getElementById('loading');
+        const errorBoundary = document.getElementById('error-boundary');
+        if (loading) loading.style.display = 'none';
+        if (errorBoundary) errorBoundary.classList.remove('hidden');
+      });
+      
+      // Unhandled promise rejection
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error('Unhandled promise rejection:', e.reason);
+        const loading = document.getElementById('loading');
+        const errorBoundary = document.getElementById('error-boundary');
+        if (loading) loading.style.display = 'none';
+        if (errorBoundary) errorBoundary.classList.remove('hidden');
+      });
+      
+      // Service Worker registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+      
+      // Theme detection
+      function getInitialTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          return savedTheme;
+        }
+        
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        
+        return 'light';
+      }
+      
+      // Apply initial theme
+      const theme = getInitialTheme();
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+      
+      // Theme change listener
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme')) {
+          if (e.matches) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        }
+      });
+    </script>
+  </body>
+</html> 

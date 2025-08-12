@@ -1,0 +1,1 @@
+# Testes para ObsidianAI Sync Backend 
