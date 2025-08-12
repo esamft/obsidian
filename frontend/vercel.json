@@ -1,43 +1,8 @@
 {
-  "buildCommand": "",
-  "outputDirectory": "public",
-  "installCommand": "",
   "rewrites": [
     {
       "source": "/",
       "destination": "/index_simple.html"
-    },
-    {
-      "source": "/health",
-      "destination": "/api/health"
-    },
-    {
-      "source": "/api/process",
-      "destination": "/api/process"
-    }
-  ],
-  "functions": {
-    "api/*.py": {
-      "runtime": "@vercel/python@4.1.0"
-    }
-  },
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
-        }
-      ]
     }
   ]
 }

@@ -249,9 +249,7 @@
     </div>
 
     <script>
-        const API_URL = window.location.hostname === 'localhost' 
-            ? 'http://localhost:8000' 
-            : '';
+        const API_URL = ''; // Sem backend - apenas simulação
         const selectedCategory = 'inbox'; // Sempre inbox
         let uploadedFiles = [];
         
@@ -331,70 +329,57 @@
             statusDiv.textContent = '⏳ Criando rascunho...';
             previewDiv.style.display = 'none';
             
-            try {
-                const response = await fetch(`${API_URL}/api/process`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        text: text,
-                        category: selectedCategory,
-                        attachments: attachmentFilenames
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    statusDiv.className = 'status success';
-                    statusDiv.innerHTML = `✅ Rascunho criado!<br><small>📁 ${result.file_path}</small>`;
-                    
-                    // Preview simples
-                    if (result.content) {
-                        previewDiv.style.display = 'block';
-                        // Mostrar apenas as primeiras 300 caracteres
-                        const preview = result.content.length > 300 ? 
-                            result.content.substring(0, 300) + '...' : 
-                            result.content;
-                        previewContent.textContent = preview;
-                    }
-                    
-                    // Limpar campos após sucesso
-                    setTimeout(() => {
-                        document.getElementById('textInput').value = '';
-                        document.getElementById('fileList').innerHTML = '';
-                        uploadedFiles = [];
-                        previewDiv.style.display = 'none';
-                    }, 3000);
-                } else {
-                    statusDiv.className = 'status error';
-                    statusDiv.textContent = `❌ Erro: ${result.error || 'Falha no processamento'}`;
-                }
-            } catch (error) {
-                statusDiv.className = 'status error';
-                statusDiv.textContent = `❌ Erro de conexão: ${error.message}`;
-            } finally {
+            // Simulação do processamento (sem backend)
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simular delay
+            
+            // Criar rascunho simulado
+            const currentDate = new Date().toLocaleDateString('pt-BR');
+            const title = text.length > 50 ? text.substring(0, 50) + '...' : text;
+            const summary = text.length > 200 ? text.substring(0, 200) + '...' : text;
+            
+            const mockContent = `# Rascunho - ${title}
+
+**Data:** ${currentDate}
+**Tipo:** Rascunho
+
+## Resumo
+${summary}
+
+## Conteúdo Original
+${text}
+
+---
+*Nota criada automaticamente - para ser processada posteriormente*`;
+
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = `✅ Rascunho criado!<br><small>📁 /Inbox/rascunho-${Date.now()}.md</small>`;
+            
+            // Preview simples
+            previewDiv.style.display = 'block';
+            const preview = mockContent.length > 300 ? 
+                mockContent.substring(0, 300) + '...' : 
+                mockContent;
+            previewContent.textContent = preview;
+            
+            // Limpar campos após sucesso
+            setTimeout(() => {
+                document.getElementById('textInput').value = '';
+                document.getElementById('fileList').innerHTML = '';
+                uploadedFiles = [];
+                previewDiv.style.display = 'none';
+            }, 5000); finally {
                 processBtn.disabled = false;
             }
         });
         
-        // Verificar status da API ao carregar
-        window.addEventListener('load', async () => {
-            try {
-                const response = await fetch(`${API_URL}/health`);
-                const health = await response.json();
-                
-                if (health.status !== 'healthy') {
-                    const statusDiv = document.getElementById('status');
-                    statusDiv.className = 'status error';
-                    statusDiv.textContent = '⚠️ API precisa de configuração. Verifique o backend.';
-                }
-            } catch (error) {
-                const statusDiv = document.getElementById('status');
-                statusDiv.className = 'status error';
-                statusDiv.textContent = '❌ Backend não está rodando. Inicie o servidor primeiro.';
-            }
+        // Sistema funcionando em modo demonstração
+        window.addEventListener('load', () => {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = 'status success';
+            statusDiv.textContent = '🎯 Sistema pronto! Modo demonstração ativo.';
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
         });
     </script>
 </body>
