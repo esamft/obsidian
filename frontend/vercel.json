@@ -6,14 +6,19 @@
     {
       "source": "/",
       "destination": "/index_simple.html"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/health"
+    },
+    {
+      "source": "/api/process",
+      "destination": "/api/process"
     }
   ],
   "functions": {
-    "api/health.py": {
-      "runtime": "python3.9"
-    },
-    "api/process.py": {
-      "runtime": "python3.9"
+    "api/*.py": {
+      "runtime": "@vercel/python@4.1.0"
     }
   },
   "headers": [
